@@ -1,24 +1,23 @@
 list_input = {"-": "-",
-              "Spot price": "Current market price at which asset is bought or sold. eg: 120",
+              "Spot price": "Current market price at which asset is bought or sold.",
 
-              "Strike": 'The price at which a put or call option can be exercised. eg: 120',
+              "Strike": 'The price at which a put or call option can be exercised.',
 
               "Risk-free rate": 'The risk-free interest rate is the rate of return of a hypothetical investment with no'
-                                ' risk of financial loss, over a given period of time. eg: 2',
+                                ' risk of financial loss, over a given period of time.',
 
               "Volatility": 'Standard deviation of the underlying asset stock price, in other words the degree of'
-                            ' variation of the price. eg: 20',
+                            ' variation of the price.',
 
               "Maturity": 'Date on which the option will cease to exist, and when the investor will be able to exercise'
-                          ' his right to buy or sell the underlying asset (for European_Options). eg: 3',
+                          ' his right to buy or sell the underlying asset).',
 
               "Drift": 'Rate at which the underlying stock average changes. It gives the general trend of the stock '
-                       'movements. eg: 8',
+                       'movements.',
 
               "Discretization step": 'Used in the pricing model of the underlying asset, its mathematical definition is'
                                      ' the step at which the continuous period (i.e. from t = 0 to t = maturity) is'
-                                     ' discretized. Financially speaking, it is time between each pricing of the asset.'
-                                     ' eg: 0.01',
+                                     ' discretized. Financially speaking, it is time between each pricing of the asset.',
 
               "Tree periods": "Size of the binomial lattice (tree). 10-20 are more than enough to converge to the "
                               "Black-Scholes price. The number of nodes for a given lattice of n periods is given by an"

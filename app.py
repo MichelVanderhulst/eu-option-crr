@@ -1,15 +1,19 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from EU_Option_CRR_GRW_V5 import *
 from descriptions import list_input
 import pandas 
+import base64
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+image_filename = "CRR-math.png"
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
+# app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 server = app.server
 
@@ -31,6 +35,24 @@ app.layout = html.Div([
     # HEADER
     dcc.Markdown(children=top_markdown_text),
     #
+    dbc.Button(
+        "Show me the math", 
+        id="popover-target", 
+        color="primary", 
+        className="mr-1",
+        #size="lg",
+        ),
+    dbc.Popover(
+        [
+            dbc.PopoverHeader("CRR model math"),
+            dbc.PopoverBody([html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode())    , style={"width": "300%"})]),
+        ],
+        id="popover",
+        is_open=False,
+        target="popover-target",
+        ),
+    html.Br(),
+    html.Br(),
     # LEFT - CHOROPLETH MAP
     html.Div([
         dcc.Dropdown(
@@ -39,17 +61,18 @@ app.layout = html.Div([
             		 {'label':'European Put option', 'value':"Put"}],
             value='Call'),
         #
+        html.Br(),
+
         html.Div([
-        	html.Div([
             	html.Label('Spot price', title=list_input["Spot price"]),
             	dcc.Input(id="S", value=100, type='number')
-        	], className="six columns"),
+        	],style={'width': '49%', 'display': 'inline-block'}),
 
-       		html.Div([
+       	html.Div([
             	html.Label("Strike", title=list_input["Strike"]),
             	dcc.Input(id="K", value=100, type='number')
-        	], className="six columns"),
-    	], className="row"),
+        	],style={'width': '49%', 'display': 'inline-block'}),
+
     	#
     	html.Label('Drift', title=list_input["Drift"]),
         html.Div(id='drift'),
@@ -105,6 +128,7 @@ app.layout = html.Div([
     	html.Label('Tree periods', title=list_input["Tree periods"]),
         dcc.Input(id="tree_periods", value=4, type='number'),
     	#
+    	html.Br(),
     	html.Br(),
     	html.Br(),
     	dcc.Markdown(children=graph_port_details_text),
@@ -410,6 +434,18 @@ def display_value2(value):
 			  [Input('Rf', 'value')])
 def display_value3(value):
     return 'Selected value: {}'.format(value)
+
+
+@app.callback(
+    Output("popover", "is_open"),
+    [Input("popover-target", "n_clicks")],
+    [State("popover", "is_open")],
+)
+def toggle_popover(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
