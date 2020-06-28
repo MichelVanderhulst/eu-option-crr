@@ -6,22 +6,23 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 from EU_Option_CRR_GRW_V5 import *
 from descriptions import list_input
-import pandas 
 import base64
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-image_filename = "CRR-math.png"
-encoded_image = base64.b64encode(open(image_filename, 'rb').read())
-# app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], external_scripts=['https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML', "./assets/mathjax.js"])
 server = app.server
+
+bg_color="#506784",
+font_color="#F3F6FA"
+
 
 top_markdown_text = '''
 ### Call/Put Replication Strategy Tool - CRR model
 #### Michel Vanderhulst 
 #### Master's thesis - Louvain School of Management
 '''
+
+email = "michelvanderhulst@student.uclouvain.be"
 
 graph_stock_simul = ''' #### Stock simulation (GRW) '''
 graph_port_details_text = ''' #### Portfolio before/after rebalancing'''
@@ -30,119 +31,253 @@ graph_cash = ''' #### Cash account before/after rebalancing'''
 graph_option_price = ''' #### Option price'''
 graph_option_intrinsic = ''' #### Option intrinsic value'''
 
-app.layout = html.Div([
-	dcc.Store(id='memory-output'),
-    # HEADER
-    dcc.Markdown(children=top_markdown_text),
-    #
-    dbc.Button(
-        "Show me the math", 
-        id="popover-target", 
-        color="primary", 
-        className="mr-1",
-        #size="lg",
-        ),
-    dbc.Popover(
-        [
-            dbc.PopoverHeader("CRR model math"),
-            dbc.PopoverBody([html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode())    , style={"width": "300%"})]),
-        ],
-        id="popover",
-        is_open=False,
-        target="popover-target",
-        ),
-    html.Br(),
-    html.Br(),
-    # LEFT - CHOROPLETH MAP
-    html.Div([
-        dcc.Dropdown(
-            id='CallOrPut',
-            options=[{'label':'European Call option', 'value':"Call"},
-            		 {'label':'European Put option', 'value':"Put"}],
-            value='Call'),
-        #
-        html.Br(),
-
-        html.Div([
-            	html.Label('Spot price', title=list_input["Spot price"]),
-            	dcc.Input(id="S", value=100, type='number')
-        	],style={'width': '49%', 'display': 'inline-block'}),
-
-       	html.Div([
-            	html.Label("Strike", title=list_input["Strike"]),
-            	dcc.Input(id="K", value=100, type='number')
-        	],style={'width': '49%', 'display': 'inline-block'}),
-
-    	#
-    	html.Label('Drift', title=list_input["Drift"]),
-        html.Div(id='drift'),
-    	dcc.Slider(
-    		id='mu',
-        	min=-0.30,
-        	max=0.30,
-        	value=0.10,
-        	step=0.01),
-    	#
-        html.Label('Volatility', title=list_input["Volatility"]),
-        html.Div(id='sigma'),
-    	dcc.Slider(
-    		id='vol',
-        	min=0,
-        	max=1,
-        	step=0.01,
-        	value=0.20),
-    	#
-    	dcc.Markdown(children=graph_stock_simul),
-        dcc.Graph(id='stock_simul'),
-    	#
-    	dcc.Markdown(children=graph_option_price),
-        dcc.Graph(id='option_price'),
-        #
-    	dcc.Markdown(children=graph_option_intrinsic),
-        dcc.Graph(id='option_intrinsic'),
 
 
-    ], style={'float': 'left', 'width': '50%'}),
+def header():
+    return html.Div(
+                id='app-page-header',
+                children=[#html.Div(html.A(
+                      #            id='lsm-logo', 
+                      #            children=[html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open("output-onlinepngtools (1).png", 'rb').read()).decode()))],
+                      #            href="https://uclouvain.be/en/faculties/lsm",
+                      #            target="_blank", #open link in new tab
+                      #            style={'margin':'20px'}
+                      #              ), style={"display":"inline-block"}),
+                    #
+                    #
+                    # html.Div(
+                       #  html.A(
+                       #    id="nova-logo", 
+                       #    children=[html.Img(src="data:image/png;base64,{}".format(base64.b64encode(open("output-onlinepngtools (2).png",'rb').read()).decode()))],
+                       #    href="https://www2.novasbe.unl.pt/en/",
+                       #    style={"margin":"-45px"}
+                       #      ), style={"display":"inline-block"}),
+                    #
+                    #
+                    html.Div(children=[html.H3("European option replication strategy app"),
+                                       html.H4("Cox-Ross-Rubinstein model")
+                                      ],
+                             style={"display":"inline-block", "font-family":'sans-serif'}),
+                    #
+                    #
+                    html.Div(children=[dbc.Button("About", id="popover-target", outline=True, style={"color":"white", 'border': 'solid 1px white'}),
+                                       dbc.Popover(children=[dbc.PopoverHeader("About"),
+                                                             dbc.PopoverBody(["Michel Vanderhulst",                             
+                                                                              f"\n {email}", 
+                                                                              html.Hr(), 
+                                                                              "This app was built for my Master's Thesis, under the supervision of Prof. Frédéric Vrins (frederic.vrins@uclouvain.be)."]),],
+                                                   id="popover",
+                                                   is_open=False,
+                                                   target="popover-target"),
+                                       ],
+                              style={"display":"inline-block", "font-family":"sans-serif", 'marginLeft': '60%'}),
+                         ],
+                style={
+                    'background': bg_color,
+                    'color': font_color,
+                    'padding':20,
+                    'margin':'-10px',
+                }
+            )
 
-    # RIGHT - SCATTERPLOT
-    html.Div([
-    	html.Label('Risk-free rate', title=list_input["Risk-free rate"]),
-        html.Div(id='riskfree'),
-    	dcc.Slider(
-    		id='Rf',
-        	min=0,
-        	max=0.1,
-        	step=0.01,
-        	value=0.05),
-    	html.Label('Maturity', title=list_input["Maturity"]),
-    	dcc.Slider(
-    		id='T',
-        	min=1,
-        	max=5,
-        	marks={i: '{}'.format(i) for i in range(6)},
-        	step=0.25,
-        	updatemode='drag',
-        	value=3),
-    	#
-    	html.Br(),
-    	html.Label('Tree periods', title=list_input["Tree periods"]),
-        dcc.Input(id="tree_periods", value=4, type='number'),
-    	#
-    	html.Br(),
-    	html.Br(),
-    	html.Br(),
-    	dcc.Markdown(children=graph_port_details_text),
-        dcc.Graph(id='port_details'),
-        #
-        dcc.Markdown(children=graph_nbr_shares),
-        dcc.Graph(id='nbr_shares'),
-        #
-        dcc.Markdown(children=graph_cash),
-        dcc.Graph(id='cash_acc'),
-    ], style={'float': 'right', 'width': '50%'}),
 
 
-])
+
+def body():
+    return html.Div(children=[
+            html.Div(id='left-column', children=[
+                dcc.Tabs(
+                    id='tabs', value='The app',
+                    children=[
+                        dcc.Tab(
+                            label='The app',
+                            value='The app',
+                            children=html.Div(children=[
+                                html.Br(),
+                                html.H4('What is this app?', style={"text-align":"center"}),
+                                html.P(
+                                    """
+                                    This app computes the replication strategy of vanilla European options on a set of given, comparing the Cox-Ross-Rubinstein model and strategy option price.
+                                    """
+                                ),
+                                html.P(
+                                    """
+                                    The goal is to showcase that the price is truly arbitrage-free, i.e. that both risk-neutral pricing and replicating strategy have the same values. 
+                                    """
+                                ),
+                                html.P(
+                                    """
+                                    Read more about options : 
+                                    https://en.wikipedia.org/wiki/Option_(finance)
+                                    
+                                    """
+                                ),
+                            ])
+                        ),
+                        dcc.Tab(
+                            label="Model",
+                            value="Model",
+                            children=[html.Div(children=[
+                                html.Br(),
+                                html.H4("The Cox-Ross-Rubinstein model", style={"text-align":"center"}),
+                                html.P([
+                                    """
+                                    The Cox-Ross-Rubinstein model (CRR) is an example of a multi-period market model of the stock price.                                     
+                                    """]),
+                                html.Hr(),
+                                html.H4("Model assumptions", style={"text-align":"center"}),
+                                "Its main assumptions are:",
+                                html.Ul([html.Li("Does not consider dividends and transaction costs"), 
+                                         html.Li("The volatility and risk-free rate are assumed constant"),
+                                         html.Li("Fraction of shares can be traded"),
+                                         html.Li("The underlying asset can only either go 'up' by a fixed factor \(u<1\) or 'down' by \(0<d<1\)."),
+                                         html.Li("The log-returns are independent at all periods")]),
+                                html.Hr(),
+                                html.H4("Underlying asset dynamics", style={"text-align":"center"}),
+                                html.P([
+                                    """Under CRR, the underlying asset follows a geometric random walk with 
+                                    drift \(\mu\delta\) and volatility \(\sigma\sqrt{\delta}\). The probability to go 'up' and 'down' are respectively \(p\) and \(1-p\) (under \(\mathcal{P}\)).
+                                    The stock price at period \(i\) can be modeled as a function of a binomial random variable, and the constant 'up' and 'down' factors
+                                    computed: $$u=e^{\mu\delta+\sigma\sqrt{\delta}}$$ $$d=e^{\mu\delta-\sigma\sqrt{\delta}}$$. The \(\mathcal{Q}\)-probability allowing the discounted
+                                    stock price to be a martingale amounts to the \(p\) value (under \(\mathcal{Q}\)) that leads to the martingale property: \(p=\\frac{e^{r}-d}{u-d}\).
+                                    """])
+                                ])]),
+                        #
+                        #
+                        dcc.Tab(
+                            label="Approach",
+                            value="Methodology",
+                            children=[html.Div(children=[
+                                html.Br(),
+                                html.H4("Methodology followed", style={"text-align":"center"}),
+                                html.P([
+                                    """
+                                    To prove that the risk-neutral price is arbitrage-free, let us try to perfectly replicate it with a strategy. If the strategy is successfull, then 
+                                    the price is unique and therefore arbitrage-free.
+                                    """]),
+                                html.Hr(),
+                                html.H4("Risk-neutral pricing", style={"text-align":"center"}),
+                                html.P([
+                                    """
+                                    With the CRR, the stock tree and the option intrinsic value are easily computed at all nodes. Under the pricing measure, the option
+                                    price of a node is simply the discounted value of the two children nodes. The price tree is therefore filled backwards,
+                                    starting from the leaves (i.e. the payoff).
+                                    """]),
+                                html.H4("Replicating portfolio", style={"text-align":"center"}),
+                                html.P([
+                                    """
+                                    Then, if the price computed is truly arbitrage-free, a replication strategy can be based on this price: \(\pi_{0} = v_{0}\).
+                                     At the begining of each period, the number of shares to hold is \(\Delta_{i}^{j} = \\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}\). 
+                                     The initial amount of cash will be \(c_{0} = \pi_{0} - \Delta_{0}s_{0}\). At each node, a portfolio rebalancing is needed. Before the rebalancing, 
+                                     \(\Delta\) is the same from node to node \(\Delta_{i}^{j}=\Delta_{i-1}^{j}\), the cash account grew at the risk-free rate \(c_{i}^{j}=c_{i-1}^{j}e^{r}\), 
+                                     and the portfolio is the sum of both equity and cash positions \(\pi_{i}^{j}=c_{i}^{j}+\Delta_{i}^{j}s_{i}^{j}\). The rebalancing is done by updating the shares 
+                                     to hold \(\Delta_{i}^{j}=\\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}\) and ensuring the of value of the strategy before and after the rebalancing is 
+                                     the same \(c_{i}^{j}=\pi_{i}^{j}-(\Delta_{i-1}^{j}-\Delta_{i}^{j})s_{i}^{j}\). The tree is computed forward, and will at all times replicate with option price.
+                                      At the end of it we obtain the option payoff.
+                                    """]),
+                                ])]),
+                        #
+                        #
+                        dcc.Tab(
+                            label='Input',
+                            value='Input',
+                            children=html.Div(children=[
+                                                html.Br(),
+                                                #
+                                                html.P(
+                                                    """
+                                                    Hover your mouse over any input to get its definition.                           
+                                                    """
+                                                ),
+                                                dcc.Dropdown(
+                                                    id='CallOrPut',
+                                                    options=[{'label':'European Call option', 'value':"Call"},
+                                                             {'label':'European Put option', 'value':"Put"}],
+                                                    value='Call'),
+                                                #
+                                                html.Br(),
+                                                #
+                                                html.Div(children=[html.Label('Spot price', title=list_input["Spot price"], style={'font-weight': 'bold', "text-align":"center", "width":"25%",'display': 'inline-block'} ),
+                                                                   dcc.Input(id="S", value=100, type='number', style={"width":"16%", 'display': 'inline-block'}),
+                                                                   html.Label("Strike", title=list_input["Strike"], style={'font-weight': 'bold',"text-align":"center", "width":"25%",'display': 'inline-block'} ),
+                                                                   dcc.Input(id="K", value=100, type='number', style={"width":"16%", 'display': 'inline-block'}),
+                                                                  ],),                     
+                                                #
+                                                html.Div(children=[html.Label("Drift", title=list_input["Drift"], style={'font-weight': 'bold', 'display': 'inline-block'}),
+                                                                   html.Label(id="drift", style={'display': 'inline-block'}),
+                                                                  ]),
+                                                #
+                                                dcc.Slider(id='mu', min=-0.30, max=0.30, value=0.10, step=0.01, marks={-0.30: '-30%', 0.30: '30%'}),
+                                                #
+                                                html.Div([html.Label('Volatility', title=list_input["Volatility"], style={'font-weight': 'bold', "display":"inline-block"}),
+                                                          html.Label(id="sigma", style={"display":"inline-block"}),]),  
+                                                #
+                                                dcc.Slider(id='vol', min=0, max=1, step=0.01, value=0.20, marks={0:"0%", 1:"100%"}),
+                                                #
+                                                html.Div([html.Label('Risk-free rate', title=list_input["Risk-free rate"], style={'font-weight': 'bold', "display":"inline-block"}),
+                                                          html.Label(id="riskfree", style={"display":"inline-block"}),]),  
+                                                dcc.Slider(id='Rf', min=0, max=0.1, step=0.01, value=0.05, marks={0:"0%", 0.1:"10%"}),
+                                                #
+                                                html.Div([html.Label('Maturity', title=list_input["Maturity"], style={'font-weight':'bold', "display":"inline-block"}),
+                                                          html.Label(id="matu", style={"display":"inline-block"}),]),                                        
+                                                dcc.Slider(id='T', min=0.25, max=5, 
+                                                           marks={0.25:"3 months", 5:"5 years"}, step=0.25, value=3),
+                                                #
+                                                html.Br(),
+                                                html.Div(children=[html.Label('Tree periods', title=list_input["Tree periods"], style={'font-weight': 'bold', "text-align":"center", "width":"25%",'display': 'inline-block'} ),
+                                                                   dcc.Input(id="tree_periods", value=4, type='number', style={"width":"16%", 'display': 'inline-block'}),
+                                                                  ],),
+                                                ])),
+        ],),], style={'float': 'left', 'width': '25%', 'margin':"30px"}),
+    ])
+
+
+
+def graphs():
+    return html.Div(id='right-column', 
+                    children=[
+                        html.Br(),
+                        html.Div([
+                            html.Div(children=[dcc.Markdown(children=graph_option_intrinsic),
+                                               dcc.Graph(id='option_intrinsic'),],
+                                     style={"float":"right", "width":"45%", "display":"inline-block"}),
+                            html.Div(children=[dcc.Markdown(children=graph_stock_simul),
+                                               dcc.Graph(id='stock_simul'),],
+                                     style={"float":"right", "width":"55%", "display":"inline-block"}),
+                                ]),
+                        html.Div([
+                            html.Div(children=[dcc.Markdown(children=graph_option_price),
+                                               dcc.Graph(id='option_price'),],
+                                     style={"float":"right", "width":"45%", "display":"inline-block"}),
+                            html.Div(children=[dcc.Markdown(children=graph_port_details_text),
+                                               dcc.Graph(id='port_details'),],
+                                     style={"float":"right", "width":"55%", "display":"inline-block"}),
+                                ]),
+                        html.Div([
+                            html.Div(children=[dcc.Markdown(children=graph_cash),
+                                               dcc.Graph(id='cash_acc'),],
+                                     style={"float":"right", "width":"45%", "display":"inline-block"}),
+                            html.Div(children=[dcc.Markdown(children=graph_nbr_shares),
+                                               dcc.Graph(id='nbr_shares'),],
+                                     style={"float":"right", "width":"55%", "display":"inline-block"}),
+                                ]),
+
+
+                             ], 
+                    style={'float': 'right', 'width': '70%'})
+
+
+
+app.layout = html.Div(
+                id='main_page',
+                children=[
+                    dcc.Store(id='memory-output'),
+                    header(),
+                    body(),
+                    graphs(),
+                         ],
+                     )
+
 
 
 
@@ -172,14 +307,26 @@ def graph_stock_simul(data):
         title={'yref':"paper",
         		'y':1,
         		"yanchor":"bottom"},
-        margin={"t":15},
+        #margin={"t":15},
+        margin=dict(
+                l=0,
+                #r=50,
+                #b=100,
+                t=15,
+                #pad=4
+            ),
         # showlegend=False,
         xaxis={'showgrid': False, # thin lines in the background
     		   'zeroline': False, # thick line at x=0
                'visible': False,},  # numbers below}
         yaxis={'showgrid': False, # thin lines in the background
     		   'zeroline': False, # thick line at x=0
-               'visible': False,}  # numbers below}
+               'visible': False,},  # numbers below}
+        legend=dict(
+            x=0,
+            y=1,
+            traceorder='normal',
+            bgcolor='rgba(0,0,0,0)'),
     ),
     	'data': [
 	        go.Scatter(
@@ -239,7 +386,13 @@ def graph_portf_details(data):
         		'y':1,
         		"yanchor":"bottom"},
         showlegend=False,
-        margin={"t":15},
+        margin=dict(
+                l=0,
+                #r=50,
+                #b=100,
+                t=15,
+                #pad=4
+            ),
         xaxis={'showgrid': False, # thin lines in the background
     		   'zeroline': False, # thick line at x=0
                'visible': False,},  # numbers below}
@@ -279,8 +432,13 @@ def graph_nbr_of_shares(data):
         		'y':1,
         		"yanchor":"bottom"},
         showlegend=False,
-        margin={"t":15},
-        xaxis={'showgrid': False, # thin lines in the background
+        margin=dict(
+                l=0,
+                #r=50,
+                #b=100,
+                t=15,
+                #pad=4
+            ),        xaxis={'showgrid': False, # thin lines in the background
     		   'zeroline': False, # thick line at x=0
                'visible': False,},  # numbers below}
         yaxis={'showgrid': False, # thin lines in the background
@@ -317,7 +475,13 @@ def graph_cash_account(data):
         		'y':1,
         		"yanchor":"bottom"},
         showlegend=False,
-        margin={"t":15},
+        margin=dict(
+                l=0,
+                #r=50,
+                #b=100,
+                t=15,
+                #pad=4
+            ),
         xaxis={'showgrid': False, # thin lines in the background
     		   'zeroline': False, # thick line at x=0
                'visible': False,},  # numbers below}
@@ -355,7 +519,13 @@ def graph_option_pricee(data):
         		'y':1,
         		"yanchor":"bottom"},
         showlegend=False,
-        margin={"t":15},
+        margin=dict(
+                l=0,
+                #r=50,
+                #b=100,
+                t=15,
+                #pad=4
+            ),
         xaxis={'showgrid': False, # thin lines in the background
     		   'zeroline': False, # thick line at x=0
                'visible': False,},  # numbers below}
@@ -393,7 +563,13 @@ def graph_option_pricee(data):
         		'y':1,
         		"yanchor":"bottom"},
         showlegend=False,
-        margin={"t":15},
+        margin=dict(
+                l=0,
+                #r=50,
+                #b=100,
+                t=15,
+                #pad=4
+            ),
         xaxis={'showgrid': False, # thin lines in the background
     		   'zeroline': False, # thick line at x=0
                'visible': False,},  # numbers below}
@@ -423,18 +599,27 @@ def graph_option_pricee(data):
 @app.callback(Output('drift', 'children'),
               [Input('mu', 'value')])
 def display_value(value):
-    return 'Selected value: {}'.format(value)
+    return f': {int(value*100)}%'
 
 @app.callback(Output('sigma', 'children'),
-			  [Input('vol', 'value')])
+              [Input('vol', 'value')])
 def display_value2(value):
-    return 'Selected value: {}'.format(value)
+    return f': {int(value*100)}%'
 
 @app.callback(Output('riskfree', 'children'),
-			  [Input('Rf', 'value')])
+              [Input('Rf', 'value')])
 def display_value3(value):
-    return 'Selected value: {}'.format(value)
+    return f': {int(value*100)}%'
 
+@app.callback(Output('matu', 'children'),
+              [Input('T', 'value')])
+def display_value4(value):
+    if value==0.25 or value==0.5 or value==0.75:
+        return f": {int(value*12)} months"
+    elif value == 1:
+        return f': {value} year'
+    else:
+        return f': {value} years'
 
 @app.callback(
     Output("popover", "is_open"),
