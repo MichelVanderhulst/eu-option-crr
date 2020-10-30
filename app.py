@@ -12,7 +12,7 @@ from layout_body_graphs import body, graphs
 from header import header
 import pandas as pd
 import io
-import flask
+
 
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], external_scripts=['https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML', "./assets/mathjax.js"])
@@ -672,11 +672,6 @@ def update_download_link(data):
 
     excel_writer.save()
     strIO.seek(0)
-
-    # data = base64.b64encode(strIO.read()).decode("utf-8")
-    # downloadable_data = f'data:text/xlsx;base64,{data}'
-    # return downloadable_data
-
 
     # https://en.wikipedia.org/wiki/Data_URI_scheme
     media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
