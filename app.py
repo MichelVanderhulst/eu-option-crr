@@ -679,7 +679,7 @@ def update_download_link(data):
     nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel = np.array(nbrofsharesLabel), np.array(cashLabel), np.array(portfolioLabel), np.array(optionpriceLabel), np.array(intrinsicLabel), np.array(stocksLabel)
 
     list_of_outputs = (stocksLabel, intrinsicLabel, portfolioLabel, optionpriceLabel, nbrofsharesLabel, cashLabel)
-    list_of_names = ["Stock simulation", "Option intrinsic value", "Portfolio", "Option price", "Number of shares", "Cash account"]
+    list_of_names = ["Stock", "Intrinsic", "Portfolio", "Option Price", "Nbr Shares", "Cash Account"]
     counter = 0
 
     endbis, startbis = [0], [0]
