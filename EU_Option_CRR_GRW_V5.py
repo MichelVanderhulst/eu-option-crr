@@ -29,6 +29,19 @@ def RepStrat_EU_Option_CRR_GRW_V5(CallOrPut, S, K, rf, T, mu, vol, tree__periods
     ####################################################################################################################
     #####################  START derivative/model specifics, user input transformation             #####################
 
+    arguments = [CallOrPut, S, K, rf, T, mu, vol, tree__periods] #TC skipped bc can just assume its 0
+    for arg in arguments:
+        if arg == None:
+            return [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]
+
+    if  S < 0 or K < 0  or tree__periods < 1:
+        return [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]
+    # nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, 
+    #edge_x, edge_y, node_x, node_y, round(u,2), round(d,2), round(probUp,2), round(probDown,2), edge_y_Stock, 
+    # node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, 
+    # edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods :27 returns
+    
+
     if CallOrPut == "Call":
         phi = 1
     elif CallOrPut == "Put":

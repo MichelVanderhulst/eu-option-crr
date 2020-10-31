@@ -616,6 +616,32 @@ def graph_option_pricee(data,value):
     }
 
 
+@app.callback(Output('message_S', 'children'),
+              [Input('S', 'value')])
+def check_input_S(S):
+    if S<0:
+        return f'Cannot be lower than 0.'
+    else:
+        return ""
+
+
+
+@app.callback(Output('message_K', 'children'),
+              [Input('K', 'value')])
+def check_input_K(K):
+    if K<0:
+        return f'Cannot be lower than 0.'
+    else:
+        return ""
+
+@app.callback(Output('message_tree', 'children'),
+              [Input('tree_periods', 'value')])
+def check_input_K(tree__periods):
+    if tree__periods<1:
+        return f'Cannot be lower than 1.'
+    else:
+        return ""
+
 
 @app.callback(Output('drift', 'children'),
               [Input('mu', 'value')])

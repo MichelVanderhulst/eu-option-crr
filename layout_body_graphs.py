@@ -123,11 +123,17 @@ def body():
                                                 #
                                                 html.Br(),
                                                 #
-                                                html.Div(children=[html.Label('Spot price', title=list_input["Spot price"], style={'font-weight': 'bold', "text-align":"center", "width":"25%",'display': 'inline-block'} ),
-                                                                   dcc.Input(id="S", value=100, type='number', style={"width":"16%", 'display': 'inline-block'}),
-                                                                   html.Label("Strike", title=list_input["Strike"], style={'font-weight': 'bold',"text-align":"center", "width":"25%",'display': 'inline-block'} ),
-                                                                   dcc.Input(id="K", value=100, type='number', style={"width":"16%", 'display': 'inline-block'}),
-                                                                  ],),                     
+                                               html.Div(children=[html.Label('Spot price', title=list_input["Spot price"], style={'font-weight': 'bold', "text-align":"left", "width":"25%",'display': 'inline-block'} ),
+                                                                  dcc.Input(id="S", value=100, type='number', style={"width":"16%", 'display': 'inline-block'}),
+                                                                  html.P("",id="message_S", style={"font-size":12, "color":"red", "padding":5, 'width': '55%', "text-align":"left", 'display': 'inline-block'})
+                                                                  ]
+                                                        ),
+
+                                              html.Div(children=[html.Label("Strike", title=list_input["Strike"], style={'font-weight': 'bold',"text-align":"left", "width":"25%",'display': 'inline-block'} ),
+                                                                 dcc.Input(id="K", value=100, type='number', style={"width":"16%", 'display': 'inline-block'}),
+                                                                 html.P("",id="message_K", style={"font-size":12, "color":"red", "padding":5, 'width': '55%', "text-align":"left", 'display': 'inline-block'})
+                                                                ],
+                                                      ),                   
                                                 #
                                                 html.Div(children=[html.Label("Drift", title=list_input["Drift"], style={'font-weight': 'bold', 'display': 'inline-block'}),
                                                                    html.Label(id="drift", style={'display': 'inline-block'}),
@@ -152,7 +158,9 @@ def body():
                                                 html.Br(),
                                                 html.Div(children=[html.Label('Tree periods: ', title=list_input["Tree periods"], style={'font-weight': 'bold', "text-align":"left", "width":"30%",'display': 'inline-block'} ),
                                                                    dcc.Input(id="tree_periods", value=4, type='number', style={"width":"16%", 'display': 'inline-block'}),
-                                                                  ],),
+                                                                   html.P("",id="message_tree", style={"font-size":12, "color":"red", "padding":5, 'width': '40%', "text-align":"left", 'display': 'inline-block'})
+                                                                  ],
+                                                        ),
                                                 html.Div(children=[html.Label("Graph type: ", style={'font-weight': 'bold', "text-align":"center",'display': 'inline-block'} ),
                                                                    dcc.RadioItems(id="GraphType",
                                                                                   options=[{'label': 'Spatial', 'value': 'spatial'},
@@ -165,11 +173,11 @@ def body():
                                                                   ]),
                                                 html.P("""Note that some errors are possible due to rounding decimals when displaying the values in the chart. Refer to 'Download the data' if you wish to check. """),
                                                 html.Br(),
-                                                html.A('Download Data', id='download-link', href="", target="_blank"), # download="rawdata.xlsx",
+                                                html.A('Download Data', id='download-link', href="", target="_blank", download="rawdata.xlsx"),
                                                 html.P("""Note: requires excel decimal separator to be a dot.""", style={"font-size":12}),
 
                                                 ])),
-        ],),], style={'float': 'left', 'width': '25%', 'margin':"30px"}),
+        ],),], style={'float': 'left', 'width': '25%', 'margin':"30px"}), #"border":"2px black solid" => have to add padding to that
     ])
 
 
