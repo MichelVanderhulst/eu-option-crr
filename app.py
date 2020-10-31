@@ -680,7 +680,6 @@ def update_download_link(data):
 
     list_of_outputs = (stocksLabel, intrinsicLabel, portfolioLabel, optionpriceLabel, nbrofsharesLabel, cashLabel)
     list_of_names = ["Stock simulation", "Option intrinsic value", "Portfolio", "Option price", "Number of shares", "Cash account"]
-    list_of_names = ["tab1", "tab2", "tab3", "tab4", "tab5", "tab6"]
     counter = 0
 
     endbis, startbis = [0], [0]
