@@ -15,6 +15,7 @@ import pandas as pd
 import io
 import flask
 from flask.helpers import send_file
+import urllib.parse
 
 
 
@@ -642,6 +643,9 @@ def display_value4(value):
         return f': {value} years'
 
 
+
+## WORKS LOCALLY, NOT ONLINE
+
 # @app.callback(Output('download-link', 'href'), 
 #              [Input('memory-output', 'data')])
 # def update_download_link(data):
@@ -685,7 +689,7 @@ def display_value4(value):
 
 
 
-
+## WORKS LOCALLY, NOT ONLINE
 
 @app.callback(Output('download-link', 'href'), 
              [Input('memory-output', 'data')])
@@ -729,6 +733,15 @@ def update_href(data):
 def serve_static(path):
     root_dir = os.getcwd()
     return flask.send_from_directory(os.path.join(root_dir, 'downloads'), path)
+
+
+
+
+
+
+
+
+
 
 
 
