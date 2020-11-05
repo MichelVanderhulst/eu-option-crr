@@ -785,17 +785,20 @@ def update_download_link(data):
       startbis.append(startbis[i]+startstep[i])
 
     strIO = io.BytesIO()
-    excel_writer = pd.ExcelWriter(strIO, engine="xlsxwriter", encoding="utf-8")
+    excel_writer = pd.ExcelWriter(strIO, engine="xlsxwriter")
+    df = pdf.DataFrame({"test":[0],"test2":[5]})
 
-    for output in list_of_outputs:
-      temp = pd.DataFrame(index=np.arange(0,tree__periods+1))
-      temp.loc[:,0] = pd.Series(output[0])
-      for j in range(1, tree__periods+1):
-        temp.loc[:, j] = pd.Series(output[startbis[j]:endbis[j]+1])
+    # for output in list_of_outputs:
+    #   temp = pd.DataFrame(index=np.arange(0,tree__periods+1))
+    #   temp.loc[:,0] = pd.Series(output[0])
+    #   for j in range(1, tree__periods+1):
+    #     temp.loc[:, j] = pd.Series(output[startbis[j]:endbis[j]+1])
 
-      temp.index = np.arange(1, tree__periods+2)
-      temp.to_excel(excel_writer, startrow=(tree__periods+4)*counter)
-      counter += 1
+    #   temp.index = np.arange(1, tree__periods+2)
+    #   temp.to_excel(excel_writer, startrow=(tree__periods+4)*counter)
+    #   counter += 1
+    
+    df.to_excel(excel_writer, startrow=(tree__periods+4)*counter)
 
     excel_writer.save()
     strIO.seek(0)
