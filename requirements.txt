@@ -71,4 +71,4 @@ urllib3==1.25.8
 Werkzeug==1.0.1
 whichcraft==0.6.1
 yfinance==0.1.54
-dash_extensions=0.0.31
+dash_extensions==0.0.31
