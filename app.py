@@ -836,7 +836,6 @@ def generate_xlsx(n_clicks, data):
           temp.to_excel(xslx_writer, sheet_name=f"{list_of_names[counter]}")
           counter += 1
 
-        #df.to_excel(xslx_writer, index=False, sheet_name="sheet1")
         xslx_writer.save()
 
     return send_bytes(to_xlsx, "rawdata.xlsx")
