@@ -704,7 +704,6 @@ def update_download_link(data):
 
     # https://en.wikipedia.org/wiki/Data_URI_scheme
     media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    media_type = 'application/vnd.ms-excel'
     data = base64.b64encode(strIO.read()).decode("utf-8")
     href_data_downloadable = f'data:{media_type};base64,{data}'
     return href_data_downloadable 
@@ -794,8 +793,6 @@ def update_download_link(data):
 #     #   temp.to_excel(excel_writer, startrow=(tree__periods+4)*counter)
 #     #   counter += 1
     
-#     df.to_excel(excel_writer, startrow=(tree__periods+4)*counter)
-
 #     excel_writer.save()
 #     strIO.seek(0)
 #     # https://en.wikipedia.org/wiki/Data_URI_scheme

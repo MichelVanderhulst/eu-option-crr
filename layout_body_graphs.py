@@ -173,7 +173,7 @@ def body():
                                                                   ]),
                                                 html.P("""Note that some errors are possible due to rounding decimals when displaying the values in the chart. Refer to 'Download the data' if you wish to check. """),
                                                 html.Br(),
-                                                html.A('Download Data', id='download-link', href="", target="_blank", download="rawdata.xlsx"),
+                                                html.A('Download Data', id='download-link', target="_blank")#, download="rawdata.xlsx"), #href="",
                                                 html.P("""Note: requires excel decimal separator to be a dot.""", style={"font-size":12}),
 
                                                 ])),
