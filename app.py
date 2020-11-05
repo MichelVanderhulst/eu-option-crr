@@ -807,7 +807,8 @@ def display_value4(value):
 
 @app.callback(Output("download", "data"), 
              [Input("btn", "n_clicks"),
-             Input('memory-output', 'data')])
+             Input('memory-output', 'data')],
+             prevent_initial_call=True)
 def generate_xlsx(n_clicks, data):
     nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
     nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel = np.array(nbrofsharesLabel), np.array(cashLabel), np.array(portfolioLabel), np.array(optionpriceLabel), np.array(intrinsicLabel), np.array(stocksLabel)
