@@ -672,46 +672,46 @@ def display_value4(value):
 
 ## WORKS LOCALLY, NOT ONLINE
 
-@app.callback(Output('download-link', 'href'), 
-             [Input('memory-output', 'data')])
-def update_download_link(data):
-    nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
-    nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel = np.array(nbrofsharesLabel), np.array(cashLabel), np.array(portfolioLabel), np.array(optionpriceLabel), np.array(intrinsicLabel), np.array(stocksLabel)
+# @app.callback(Output('download-link', 'href'), 
+#              [Input('memory-output', 'data')])
+# def update_download_link(data):
+#     nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
+#     nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel = np.array(nbrofsharesLabel), np.array(cashLabel), np.array(portfolioLabel), np.array(optionpriceLabel), np.array(intrinsicLabel), np.array(stocksLabel)
 
-    list_of_outputs = (stocksLabel, intrinsicLabel, portfolioLabel, optionpriceLabel, nbrofsharesLabel, cashLabel)
-    list_of_names = ["Stock simulation", "Option intrinsic value", "Portfolio", "Option price", "Number of shares", "Cash account"]
-    counter = 0
+#     list_of_outputs = (stocksLabel, intrinsicLabel, portfolioLabel, optionpriceLabel, nbrofsharesLabel, cashLabel)
+#     list_of_names = ["Stock simulation", "Option intrinsic value", "Portfolio", "Option price", "Number of shares", "Cash account"]
+#     counter = 0
 
-    endbis, startbis = [0], [0]
-    endstep, startstep = np.arange(2,tree__periods+2), np.arange(1,tree__periods+1)
+#     endbis, startbis = [0], [0]
+#     endstep, startstep = np.arange(2,tree__periods+2), np.arange(1,tree__periods+1)
 
-    for i in range(len(endstep)):
-      endbis.append(endbis[i]+endstep[i])
+#     for i in range(len(endstep)):
+#       endbis.append(endbis[i]+endstep[i])
 
-    for i in range(len(startstep)):
-      startbis.append(startbis[i]+startstep[i])
+#     for i in range(len(startstep)):
+#       startbis.append(startbis[i]+startstep[i])
 
-    strIO = io.BytesIO()
-    excel_writer = pd.ExcelWriter(strIO, engine="xlsxwriter")
+#     strIO = io.BytesIO()
+#     excel_writer = pd.ExcelWriter(strIO, engine="xlsxwriter")
 
-    for output in list_of_outputs:
-      temp = pd.DataFrame(index=np.arange(0,tree__periods+1))
-      temp.loc[:,0] = pd.Series(output[0])
-      for j in range(1, tree__periods+1):
-        temp.loc[:, j] = pd.Series(output[startbis[j]:endbis[j]+1])
+#     for output in list_of_outputs:
+#       temp = pd.DataFrame(index=np.arange(0,tree__periods+1))
+#       temp.loc[:,0] = pd.Series(output[0])
+#       for j in range(1, tree__periods+1):
+#         temp.loc[:, j] = pd.Series(output[startbis[j]:endbis[j]+1])
 
-      temp.index = np.arange(1, tree__periods+2)
-      temp.to_excel(excel_writer, sheet_name=f"{list_of_names[counter]}")
-      counter += 1
+#       temp.index = np.arange(1, tree__periods+2)
+#       temp.to_excel(excel_writer, sheet_name=f"{list_of_names[counter]}")
+#       counter += 1
 
-    excel_writer.save()
-    strIO.seek(0)
+#     excel_writer.save()
+#     strIO.seek(0)
 
-    # https://en.wikipedia.org/wiki/Data_URI_scheme
-    media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    data = base64.b64encode(strIO.read()).decode("utf-8")
-    href_data_downloadable = f'data:{media_type};base64,{data}'
-    return href_data_downloadable 
+#     # https://en.wikipedia.org/wiki/Data_URI_scheme
+#     media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+#     data = base64.b64encode(strIO.read()).decode("utf-8")
+#     href_data_downloadable = f'data:{media_type};base64,{data}'
+#     return href_data_downloadable 
 
 
 
@@ -765,7 +765,45 @@ def update_download_link(data):
 
 
 
+@app.callback(Output('download-link', 'href'), 
+             [Input('memory-output', 'data')])
+def update_download_link(data):
+    nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
+    nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel = np.array(nbrofsharesLabel), np.array(cashLabel), np.array(portfolioLabel), np.array(optionpriceLabel), np.array(intrinsicLabel), np.array(stocksLabel)
 
+    list_of_outputs = (stocksLabel, intrinsicLabel, portfolioLabel, optionpriceLabel, nbrofsharesLabel, cashLabel)
+    list_of_names = ["Stock simulation", "Option intrinsic value", "Portfolio", "Option price", "Number of shares", "Cash account"]
+    counter = 0
+
+    endbis, startbis = [0], [0]
+    endstep, startstep = np.arange(2,tree__periods+2), np.arange(1,tree__periods+1)
+
+    for i in range(len(endstep)):
+      endbis.append(endbis[i]+endstep[i])
+
+    for i in range(len(startstep)):
+      startbis.append(startbis[i]+startstep[i])
+
+    strIO = io.BytesIO()
+    excel_writer = pd.ExcelWriter(strIO, engine="xlsxwriter")
+
+    for output in list_of_outputs:
+      temp = pd.DataFrame(index=np.arange(0,tree__periods+1))
+      temp.loc[:,0] = pd.Series(output[0])
+      for j in range(1, tree__periods+1):
+        temp.loc[:, j] = pd.Series(output[startbis[j]:endbis[j]+1])
+
+      temp.index = np.arange(1, tree__periods+2)
+      temp.to_excel(excel_writer, startrow=(tree__periods+4)*counter)
+      counter += 1
+
+    excel_writer.save()
+    strIO.seek(0)
+    # https://en.wikipedia.org/wiki/Data_URI_scheme
+    media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    data = base64.b64encode(strIO.read()).decode("utf-8")
+    href_data_downloadable = f'data:{media_type};base64,{data}'
+    return href_data_downloadable 
 
 
 
