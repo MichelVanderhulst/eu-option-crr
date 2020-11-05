@@ -785,7 +785,7 @@ def update_download_link(data):
       startbis.append(startbis[i]+startstep[i])
 
     strIO = io.BytesIO()
-    excel_writer = pd.ExcelWriter(strIO, engine="xlsxwriter")
+    excel_writer = pd.ExcelWriter(strIO, engine="xlsxwriter", encoding="utf-8")
 
     for output in list_of_outputs:
       temp = pd.DataFrame(index=np.arange(0,tree__periods+1))
