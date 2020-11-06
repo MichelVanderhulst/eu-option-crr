@@ -174,7 +174,7 @@ def body():
                                                 html.P("""Note that some errors are possible due to rounding decimals when displaying the values in the chart. Refer to 'Download the data' if you wish to check. """),
                                                 html.Br(),
                                                 # html.A('Download Data', id='download-link', target="_blank", href="", download="data"), 
-                                                html.Div([html.Button("Download xlsx", id="btn"), Download(id="download")]),
+                                                html.Div([html.Button("Download xlsx", id="btn", n_clicks=0), Download(id="download")]),
                                                 html.P("""Note: requires excel decimal separator to be a dot.""", style={"font-size":12}),
 
                                                 ])),
