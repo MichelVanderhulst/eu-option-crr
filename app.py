@@ -17,7 +17,10 @@ from dash_extensions import Download
 from dash_extensions.snippets import send_bytes
 
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], external_scripts=['https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML', "./assets/mathjax.js"])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], 
+	                      external_scripts=['https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML', "./assets/mathjax.js"],
+	                      meta_tags=[{"content": "width=device-width"}]
+	                      )
 server = app.server
 
 

@@ -71,7 +71,7 @@ def body():
                         #
                         #
                         dcc.Tab(
-                            label="Approach",
+                            label="Appro-ach",
                             value="Methodology",
                             children=[html.Div(children=[
                                 html.Br(),
@@ -166,7 +166,7 @@ def body():
                                                                                   options=[{'label': 'Spatial', 'value': 'spatial'},
                                                                                            {'label': 'Tree', 'value': 'tree'}
                                                                                           ],
-                                                                                  value='spatial',
+                                                                                  value='tree',
                                                                                   labelStyle={'padding':5, 'font-weight': 'bold', 'display': 'inline-block'},
                                                                                   style={'font-weight': 'bold', "text-align":"center",'display': 'inline-block'}
                                                                                  ), 
