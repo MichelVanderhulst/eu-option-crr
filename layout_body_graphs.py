@@ -13,7 +13,7 @@ def body():
     return html.Div(children=[
             html.Div(id='left-column', children=[
                 dcc.Tabs(
-                    id='tabs', value='The app',
+                    id='tabs', value='About this App',
                     children=[
                         dcc.Tab(
                             label='About this App',
