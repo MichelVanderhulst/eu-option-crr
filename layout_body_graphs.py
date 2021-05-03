@@ -16,28 +16,24 @@ def body():
                     id='tabs', value='The app',
                     children=[
                         dcc.Tab(
-                            label='The app',
-                            value='The app',
+                            label='About this App',
+                            value='About this App',
                             children=html.Div(children=[
                                 html.Br(),
                                 html.H4('What is this app?', style={"text-align":"center"}),
-                                html.P(
-                                    """
-                                    This app computes the replication strategy of vanilla European options on a set of given, comparing the Cox-Ross-Rubinstein model and strategy option price.
-                                    """
-                                ),
-                                html.P(
-                                    """
-                                    The goal is to showcase that the price is truly arbitrage-free, i.e. that both risk-neutral pricing and replicating strategy have the same values. 
-                                    """
-                                ),
-                                html.P(
-                                    """
-                                    Read more about options : 
-                                    https://en.wikipedia.org/wiki/Option_(finance)
-                                    
-                                    """
-                                ),
+                                html.P(f"""This app computes the replication strategy of European options on a set of given inputs, in the Cox-Ross-Rubinstein framework"""),
+                                html.P(f"""The goal is to showcase that under the Cox-Ross-Rubinstein model assumptions (see "Model" tab), the price \(V_0\) given by the pricing formula is "arbitrage-free". 
+                                           Indeed, we show that in this case, it is possible to build a strategy that"""),
+                                html.Ul([html.Li("Can be initiated with \(V_0\) cash at time \(0\)."), 
+                                         html.Li('Is self-financing (i.e., no need to "feed" the strategy  with extra cash later'),
+                                         html.Li("Will deliver exactly the payoff of the option at maturity")
+                                       ]),
+                                html.Hr(),
+                                html.P(["""
+                                	    The considered options are European options paying \(\psi(S_T)\) at maturity \(T\) where \(\psi(X)\) is the payoff function. 
+						   				For a call, the payoff function is \(\psi(S_T)=max(0,S_T-K)\) and for a put \(\psi(S_T)=max(0,K-S_T)\) where K is the strike price."""]),
+                                html.Hr(),
+                                html.P("""Read more about options: https://en.wikipedia.org/wiki/Option_(finance)"""),
                             ])
                         ),
                         dcc.Tab(
@@ -45,12 +41,6 @@ def body():
                             value="Model",
                             children=[html.Div(children=[
                                 html.Br(),
-                                html.H4("The Cox-Ross-Rubinstein model", style={"text-align":"center"}),
-                                html.P([
-                                    """
-                                    The Cox-Ross-Rubinstein model (CRR) is an example of a multi-period market model of the stock price.                                     
-                                    """]),
-                                html.Hr(),
                                 html.H4("Model assumptions", style={"text-align":"center"}),
                                 "Its main assumptions are:",
                                 html.Ul([html.Li("Does not consider dividends and transaction costs"), 
@@ -61,12 +51,25 @@ def body():
                                 html.Hr(),
                                 html.H4("Underlying asset dynamics", style={"text-align":"center"}),
                                 html.P([
-                                    """Under CRR, the underlying asset follows a geometric random walk with 
-                                    drift \(\mu\delta\) and volatility \(\sigma\sqrt{\delta}\). The probability to go 'up' and 'down' are respectively \(p\) and \(1-p\) (under \(\mathcal{P}\)).
-                                    The stock price at period \(i\) can be modeled as a function of a binomial random variable, and the constant 'up' and 'down' factors
-                                    computed: $$u=e^{\mu\delta+\sigma\sqrt{\delta}}$$ $$d=e^{\mu\delta-\sigma\sqrt{\delta}}$$. The \(\mathcal{Q}\)-probability allowing the discounted
-                                    stock price to be a martingale amounts to the \(p\) value (under \(\mathcal{Q}\)) that leads to the martingale property: \(p=\\frac{e^{r}-d}{u-d}\).
-                                    """])
+                                    """
+                                    Under CRR, the underlying asset follows a geometric random walk with drift \(\mu\delta\) and volatility \(\sigma\sqrt{\delta}\). The probability to go 
+                					'up' and 'down' are respectively \(p\) and \(q=1-p\) (under \(\mathcal{P}\)).The stock price at period \(i\) can be modeled as a function of a binomial 
+                					random variable, and the constant 'up' and 'down' factors computed: $$u=e^{\mu\delta+\sigma\sqrt{\delta}}$$ $$d=e^{\mu\delta-\sigma\sqrt{\delta}}$$ 
+                					The \(\mathcal{Q}\)-probability allowing the discounted stock price to be a martingale amounts to the \(\\tilde{p}\) value (under \(\mathcal{Q}\)) 
+                					that leads to the martingale property: \(\\tilde{p}=\\frac{e^{r}-d}{u-d}\).
+                                    """]),
+                                html.Hr(),
+                                html.H4("Option price", style={"text-align":"center"}),
+                                html.P(["""
+										With the CRR, the stock tree and the option intrinsic value are easily computed at all nodes. Under the pricing measure \(\mathcal{Q}\), 
+               							the option price of a node is simply the discounted value of the two children nodes. The price tree is therefore filled backwards, starting from the leaves (i.e. the payoff).
+               							The pricing formula is thus $$V_i=e^{-r\\delta}(V_{i+1}\\tilde{p}+V_{i+1}\\tilde{q})$$
+                                		"""]),
+                                html.Hr(),
+                                html.H4("Academic references", style={"text-align":"center"}),
+                                html.Ul([html.Li("Vrins, F.  (2020). Course notes for LLSM2225:  Derivatives Pricing. (Financial Engineering Program, Louvain School of Management, Université catholique de Louvain)"), 
+                                         html.Li("Shreve, S. E. (2004). Stochastic Calculus for Finance I The Binomial Asset Pricing Model (2nd ed.). Springer Finance.")
+                                       ]),                                
                                 ])]),
                         #
                         #
@@ -78,28 +81,21 @@ def body():
                                 html.H4("Methodology followed", style={"text-align":"center"}),
                                 html.P([
                                     """
-                                    To prove that the risk-neutral price is arbitrage-free, let us try to perfectly replicate it with a strategy. If the strategy is successfull, then 
-                                    the price is unique and therefore arbitrage-free.
+                                    To prove that the CRR option price is arbitrage-free, let us try to perfectly replicate it with a strategy. 
+                                    If the strategy is successful, then the option price is unique and therefore arbitrage-free.
                                     """]),
                                 html.Hr(),
-                                html.H4("Risk-neutral pricing", style={"text-align":"center"}),
-                                html.P([
-                                    """
-                                    With the CRR, the stock tree and the option intrinsic value are easily computed at all nodes. Under the pricing measure, the option
-                                    price of a node is simply the discounted value of the two children nodes. The price tree is therefore filled backwards,
-                                    starting from the leaves (i.e. the payoff).
-                                    """]),
                                 html.H4("Replicating portfolio", style={"text-align":"center"}),
                                 html.P([
                                     """
-                                    Then, if the price computed is truly arbitrage-free, a replication strategy can be based on this price: \(\pi_{0} = v_{0}\).
-                                     At the begining of each period, the number of shares to hold is \(\Delta_{i}^{j} = \\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}\). 
-                                     The initial amount of cash will be \(c_{0} = \pi_{0} - \Delta_{0}s_{0}\). At each node, a portfolio rebalancing is needed. Before the rebalancing, 
-                                     \(\Delta\) is the same from node to node \(\Delta_{i}^{j}=\Delta_{i-1}^{j}\), the cash account grew at the risk-free rate \(c_{i}^{j}=c_{i-1}^{j}e^{r}\), 
-                                     and the portfolio is the sum of both equity and cash positions \(\pi_{i}^{j}=c_{i}^{j}+\Delta_{i}^{j}s_{i}^{j}\). The rebalancing is done by updating the shares 
-                                     to hold \(\Delta_{i}^{j}=\\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}\) and ensuring the of value of the strategy before and after the rebalancing is 
-                                     the same \(c_{i}^{j}=\pi_{i}^{j}-(\Delta_{i-1}^{j}-\Delta_{i}^{j})s_{i}^{j}\). The tree is computed forward, and will at all times replicate with option price.
-                                      At the end of it we obtain the option payoff.
+									Let us start a replication strategy based on the option price: \(\Pi_{0} = V_{0}\). The portfolio is composed of a cash account and a equity account. 
+									At the begining of each period, the number of shares to hold is given by $$\Delta_{i}^{j} = \\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
+									The initial amount of cash will thus be \(c_{0} = \Pi_{0} - \Delta_{0}s_{0}\). At each node, a portfolio rebalancing is needed to ensure that the portfolio value is 
+									equal to the option price. Before the rebalancing, \(\Delta\) is the same from node to node. Mathematically speaking, we have that $$\Delta_{i}^{j}=\Delta_{i-1}^{j}$$ 
+									The cash account grew at the risk-free rate \(c_{i}^{j}=c_{i-1}^{j}e^{r}\), and the portfolio is the sum of both equity and cash positions $$\pi_{i}^{j}=c_{i}^{j}+\Delta_{i}^{j}s_{i}^{j}$$ 
+									The rebalancing is done by updating the number of shares to hold $$\Delta_{i}^{j}=\\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
+									and ensuring the of value of the strategy before and after the rebalancing is the same $$c_{i}^{j}=\pi_{i}^{j}-(\Delta_{i-1}^{j}-\Delta_{i}^{j})s_{i}^{j}$$ 
+									The tree is computed forward, and will at all times replicate with option price. At the end of it we obtain the option payoff.
                                     """]),
                                 ])]),
                         #
