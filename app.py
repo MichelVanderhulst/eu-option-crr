@@ -1,15 +1,22 @@
+# Dash app libraries
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
-from EU_Option_CRR_GRW_V5 import *
-from descriptions import list_input
 import base64
 
-from layout_body_graphs import body, graphs
-from header import header
+# Importing app header, body and graphs from the other .py scripts
+from appBody import body, graphs
+from appHeader import header
+
+# Rep strat math script
+from EU_Option_CRR_GRW import *
+from inputDescriptions import list_input
+
+
+# Allowing excel export
 import os
 import pandas as pd
 import io
@@ -17,14 +24,14 @@ from dash_extensions import Download
 from dash_extensions.snippets import send_bytes
 
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], 
-	                      external_scripts=['https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML', "./assets/mathjax.js"],
-	                      meta_tags=[{"content": "width=device-width"}]
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], #modern-looking buttons, sliders, etc
+	                      external_scripts=['https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML', "./assets/mathjax.js"], #LaTeX in app
+	                      meta_tags=[{"content": "width=device-width"}] #app width adapts itself to user device
 	                      )
 server = app.server
 
 
-
+# Building the app from imports
 app.layout = html.Div(
                 id='main_page',
                 children=[
@@ -35,9 +42,7 @@ app.layout = html.Div(
                          ],
                      )
 
-
-
-
+# App interactivity: calling the replication strategy function everytime the user changes an input
 @app.callback(
   Output('memory-output', 'data'),
   [Input('CallOrPut', 'value'),
@@ -49,10 +54,11 @@ app.layout = html.Div(
      Input("vol", "value"),
      Input("tree_periods", "value")])
 def get_rep_strat_data(CallOrPut, S, K, Rf,T,mu,vol,tree_periods):
-  nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = RepStrat_EU_Option_CRR_GRW_V5(CallOrPut, S, K, Rf, T, mu, vol, tree_periods)
+  nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = RepStrat_EU_Option_CRR_GRW(CallOrPut, S, K, Rf, T, mu, vol, tree_periods)
                                 
   return nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods
 
+# Plot of stock simulation
 @app.callback(
     Output('stock_simul', 'figure'),
     [Input('memory-output', 'data'),
@@ -192,12 +198,12 @@ def graph_stock_simul(data, value):
     }
 
 
-
+# Plot of rep strat portfolio
 @app.callback(
     Output('port_details', 'figure'),
     [Input('memory-output', 'data'),
      Input("GraphType","value")])
-def graph_stock_simul(data, value):
+def graph_portfolio(data, value):
   nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
   
   if value == "tree": 
@@ -276,12 +282,12 @@ def graph_stock_simul(data, value):
           ],
     }
 
-
+# Plot of number of shares to hold
 @app.callback(
     Output('nbr_shares', 'figure'),
     [Input('memory-output', 'data'),
      Input("GraphType","value")])
-def graph_stock_simul(data, value):
+def graph_numberShares(data, value):
   nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
   
   if value == "tree": 
@@ -360,12 +366,12 @@ def graph_stock_simul(data, value):
     }
 
 
-
+# Plot of cash account
 @app.callback(
     Output('cash_acc', 'figure'),
     [Input('memory-output', 'data'),
      Input("GraphType","value")])
-def graph_stock_simul(data, value):
+def graph_cashAccount(data, value):
   nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
   
   if value == "tree":
@@ -444,7 +450,7 @@ def graph_stock_simul(data, value):
     }
 
 
-
+# Plot of option price
 @app.callback(
     Output('option_price', 'figure'),
     [Input('memory-output', 'data'),
@@ -529,12 +535,12 @@ def graph_option_pricee(data, value):
 
 
 
-
+# Plot of option intrinsic value
 @app.callback(
     Output('option_intrinsic', 'figure'),
     [Input('memory-output', 'data'),
      Input("GraphType", "value")])
-def graph_option_pricee(data,value):
+def graph_optionIntrinsicValue(data,value):
   nbrofsharesLabel, cashLabel, portfolioLabel, optionpriceLabel, intrinsicLabel, stocksLabel, edge_x, edge_y, node_x, node_y, u, d, probUp, probDown, edge_y_Stock, node_y_Stock, edge_y_Intrinsic, node_y_Intrinsic, edge_y_Optionprice, node_y_Optionprice, edge_y_Portfolio, node_y_Portfolio, edge_y_Cash, node_y_Cash, edge_y_NbrOfShares, node_y_NbrOfShares, tree__periods = data
     
   if value == "tree":
@@ -615,7 +621,7 @@ def graph_option_pricee(data,value):
           ],
     }
 
-
+# User input checks
 @app.callback(Output('message_S', 'children'),
               [Input('S', 'value')])
 def check_input_S(S):
@@ -623,8 +629,6 @@ def check_input_S(S):
         return f'Cannot be lower than 0.'
     else:
         return ""
-
-
 
 @app.callback(Output('message_K', 'children'),
               [Input('K', 'value')])
@@ -642,7 +646,7 @@ def check_input_K(tree__periods):
     else:
         return ""
 
-
+# Input visuals
 @app.callback(Output('drift', 'children'),
               [Input('mu', 'value')])
 def display_value(value):
@@ -669,7 +673,7 @@ def display_value4(value):
         return f': {value} years'
 
 
-
+# Excel export
 @app.callback(Output("download", "data"), 
              [Input("btn", "n_clicks")],
              [State('memory-output', 'data')])
@@ -707,7 +711,7 @@ def generate_xlsx(n_clicks, data):
 
 
 
-
+# Opening/Closing top-right About button
 @app.callback(
     Output("popover", "is_open"),
     [Input("popover-target", "n_clicks")],
@@ -719,5 +723,6 @@ def toggle_popover(n, is_open):
     return is_open
 
 
+# Main function, runs the app
 if __name__ == '__main__':
     app.run_server(debug=True)

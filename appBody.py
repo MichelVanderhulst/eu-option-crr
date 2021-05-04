@@ -1,14 +1,18 @@
+# Dash app libraries
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
-from EU_Option_CRR_GRW_V5 import *
-from descriptions import list_input
 import base64
 from dash_extensions import Download
 
+# Rep strat input descriptions
+from inputDescriptions import list_input
+
+
+# Creating the app body
 def body():
     return html.Div(children=[
             html.Div(id='left-column', children=[
@@ -31,7 +35,8 @@ def body():
                                 html.Hr(),
                                 html.P(["""
                                 	    The considered options are European options paying \(\psi(S_T)\) at maturity \(T\) where \(\psi(X)\) is the payoff function. 
-						   				For a call, the payoff function is \(\psi(S_T)=max(0,S_T-K)\) and for a put \(\psi(S_T)=max(0,K-S_T)\) where K is the strike price."""]),
+						   				                 For a call, the payoff function is \(\psi(S_T)=max(0,S_T-K)\) and for a put \(\psi(S_T)=max(0,K-S_T)\) where K is the strike price.
+                                       """]),
                                 html.Hr(),
                                 html.P("""Read more about options: https://en.wikipedia.org/wiki/Option_(finance)"""),
                             ])
@@ -53,17 +58,17 @@ def body():
                                 html.P([
                                     """
                                     Under CRR, the underlying asset follows a geometric random walk with drift \(\mu\delta\) and volatility \(\sigma\sqrt{\delta}\). The probability to go 
-                					'up' and 'down' are respectively \(p\) and \(q=1-p\) (under \(\mathcal{P}\)).The stock price at period \(i\) can be modeled as a function of a binomial 
-                					random variable, and the constant 'up' and 'down' factors computed: $$u=e^{\mu\delta+\sigma\sqrt{\delta}}$$ $$d=e^{\mu\delta-\sigma\sqrt{\delta}}$$ 
-                					The \(\mathcal{Q}\)-probability allowing the discounted stock price to be a martingale amounts to the \(\\tilde{p}\) value (under \(\mathcal{Q}\)) 
-                					that leads to the martingale property: \(\\tilde{p}=\\frac{e^{r}-d}{u-d}\).
+                          					'up' and 'down' are respectively \(p\) and \(q=1-p\) (under \(\mathcal{P}\)).The stock price at period \(i\) can be modeled as a function of a binomial 
+                          					random variable, and the constant 'up' and 'down' factors computed: $$u=e^{\mu\delta+\sigma\sqrt{\delta}}$$ $$d=e^{\mu\delta-\sigma\sqrt{\delta}}$$ 
+                          					The \(\mathcal{Q}\)-probability allowing the discounted stock price to be a martingale amounts to the \(\\tilde{p}\) value (under \(\mathcal{Q}\)) 
+                          					that leads to the martingale property: \(\\tilde{p}=\\frac{e^{r}-d}{u-d}\).
                                     """]),
                                 html.Hr(),
                                 html.H4("Option price", style={"text-align":"center"}),
                                 html.P(["""
-										With the CRR, the stock tree and the option intrinsic value are easily computed at all nodes. Under the pricing measure \(\mathcal{Q}\), 
-               							the option price of a node is simply the discounted value of the two children nodes. The price tree is therefore filled backwards, starting from the leaves (i.e. the payoff).
-               							The pricing formula is thus $$V_i=e^{-r\\delta}(V_{i+1}\\tilde{p}+V_{i+1}\\tilde{q})$$
+										                    With the CRR, the stock tree and the option intrinsic value are easily computed at all nodes. Under the pricing measure \(\mathcal{Q}\), 
+                           							the option price of a node is simply the discounted value of the two children nodes. The price tree is therefore filled backwards, starting from the leaves (i.e. the payoff).
+                           							The pricing formula is thus $$V_i=e^{-r\\delta}(V_{i+1}\\tilde{p}+V_{i+1}\\tilde{q})$$
                                 		"""]),
                                 html.Hr(),
                                 html.H4("Academic references", style={"text-align":"center"}),
@@ -75,7 +80,7 @@ def body():
                         #
                         dcc.Tab(
                             label="Appro-ach",
-                            value="Methodology",
+                            value="Appro-ach",
                             children=[html.Div(children=[
                                 html.Br(),
                                 html.H4("Methodology followed", style={"text-align":"center"}),
@@ -88,14 +93,14 @@ def body():
                                 html.H4("Replicating portfolio", style={"text-align":"center"}),
                                 html.P([
                                     """
-									Let us start a replication strategy based on the option price: \(\Pi_{0} = V_{0}\). The portfolio is composed of a cash account and a equity account. 
-									At the begining of each period, the number of shares to hold is given by $$\Delta_{i}^{j} = \\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
-									The initial amount of cash will thus be \(c_{0} = \Pi_{0} - \Delta_{0}s_{0}\). At each node, a portfolio rebalancing is needed to ensure that the portfolio value is 
-									equal to the option price. Before the rebalancing, \(\Delta\) is the same from node to node. Mathematically speaking, we have that $$\Delta_{i}^{j}=\Delta_{i-1}^{j}$$ 
-									The cash account grew at the risk-free rate \(c_{i}^{j}=c_{i-1}^{j}e^{r}\), and the portfolio is the sum of both equity and cash positions $$\pi_{i}^{j}=c_{i}^{j}+\Delta_{i}^{j}s_{i}^{j}$$ 
-									The rebalancing is done by updating the number of shares to hold $$\Delta_{i}^{j}=\\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
-									and ensuring the of value of the strategy before and after the rebalancing is the same $$c_{i}^{j}=\pi_{i}^{j}-(\Delta_{i-1}^{j}-\Delta_{i}^{j})s_{i}^{j}$$ 
-									The tree is computed forward, and will at all times replicate with option price. At the end of it we obtain the option payoff.
+                  									Let us start a replication strategy based on the option price: \(\Pi_{0} = V_{0}\). The portfolio is composed of a cash account and a equity account. 
+                  									At the begining of each period, the number of shares to hold is given by $$\Delta_{i}^{j} = \\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
+                  									The initial amount of cash will thus be \(c_{0} = \Pi_{0} - \Delta_{0}s_{0}\). At each node, a portfolio rebalancing is needed to ensure that the portfolio value is 
+                  									equal to the option price. Before the rebalancing, \(\Delta\) is the same from node to node. Mathematically speaking, we have that $$\Delta_{i}^{j}=\Delta_{i-1}^{j}$$ 
+                  									The cash account grew at the risk-free rate \(c_{i}^{j}=c_{i-1}^{j}e^{r}\), and the portfolio is the sum of both equity and cash positions $$\pi_{i}^{j}=c_{i}^{j}+\Delta_{i}^{j}s_{i}^{j}$$ 
+                  									The rebalancing is done by updating the number of shares to hold $$\Delta_{i}^{j}=\\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
+                  									and ensuring the of value of the strategy before and after the rebalancing is the same $$c_{i}^{j}=\pi_{i}^{j}-(\Delta_{i-1}^{j}-\Delta_{i}^{j})s_{i}^{j}$$ 
+                  									The tree is computed forward, and will at all times replicate with option price. At the end of it we obtain the option payoff.
                                     """]),
                                 ])]),
                         #
@@ -169,16 +174,15 @@ def body():
                                                                   ]),
                                                 html.P("""Note that some errors are possible due to rounding decimals when displaying the values in the chart. Refer to 'Download the data' if you wish to check. """),
                                                 html.Br(),
-                                                # html.A('Download Data', id='download-link', target="_blank", href="", download="data"), 
                                                 html.Div([html.Button("Download xlsx", id="btn", n_clicks=0), Download(id="download")]),
                                                 html.P("""Note: requires excel decimal separator to be a dot.""", style={"font-size":12}),
 
                                                 ])),
-        ],),], style={'float': 'left', 'width': '25%', 'margin':"30px"}), #"border":"2px black solid" => have to add padding to that
+        ],),], style={'float': 'left', 'width': '25%', 'margin':"30px"}), 
     ])
 
 
-
+# Creating the app graphs
 def graphs():
     return html.Div(id='right-column', 
                     children=[

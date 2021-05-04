@@ -24,7 +24,7 @@ def p_bs(spot_price, strike, riskfree_rate, T, volatility, phi):
     return phi * (spot_price * norm.cdf(phi * d1) - strike * np.exp(-riskfree_rate * T) * norm.cdf(phi * d2))
 
 
-def RepStrat_EU_Option_CRR_GRW_V5(CallOrPut, S, K, rf, T, mu, vol, tree__periods):
+def RepStrat_EU_Option_CRR_GRW(CallOrPut, S, K, rf, T, mu, vol, tree__periods):
 
     ####################################################################################################################
     #####################  START derivative/model specifics, user input transformation             #####################
