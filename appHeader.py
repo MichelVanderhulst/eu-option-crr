@@ -32,7 +32,7 @@ def header():
                                               style={"margin-left":"10px"}
                                               ),
 
-                                       html.Div(children=[html.H5("Asian option replication strategy app"),
+                                       html.Div(children=[html.H5("European option replication strategy app"),
                                                           html.H6("Cox-Ross-Rubinstein model")
                                                           ],
                                                  style={"display":"inline-block", "font-family":'sans-serif','transform':'translateY(+32%)', "margin-left":"10px"}),
@@ -47,7 +47,7 @@ def header():
                                                                        is_open=False,
                                                                        target="popover-target"),
                                                           ],
-                                                 style={"display":"inline-block","font-family":"sans-serif","marginLeft":"55%", "margin-right":"10px"}),
+                                                 style={"display":"inline-block","font-family":"sans-serif","marginLeft":"53%", "margin-right":"10px"}),
 
                                      html.A(id="nova-logo",
                                             children=[html.Img(style={"height":"9%","width":"9%"}, src="data:image/png;base64,{}".format(base64.b64encode(open(f"{logo2path}","rb").read()).decode()))],
