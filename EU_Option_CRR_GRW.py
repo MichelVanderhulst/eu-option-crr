@@ -1,9 +1,6 @@
-import matplotlib
 import networkx as nx
-import matplotlib.pyplot as plt
 from scipy.stats import norm
 import numpy as np
-import pandas
 
 #######################################################################################################################
 ### European Options
@@ -14,7 +11,7 @@ import pandas
 ## SYLLABUS Derivatives Pricing
 # CRR model description, Part 1 : pages 91 -> 94
 # Rep Strat CRR implementation, Part 2 pages: 45 -> 58
-## Yuxing Yan Python for Finance 2nd edition -> the script for the binomial tree
+## Yuxing Yan Python for Finance 2nd edition -> the script for the binomial tree was adapted
 #######################################################################################################################
 
 
