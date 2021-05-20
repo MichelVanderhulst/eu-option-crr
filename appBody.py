@@ -60,8 +60,8 @@ def body():
                                     Under CRR, the underlying asset follows a geometric random walk with drift \(\mu\delta\) and volatility \(\sigma\sqrt{\delta}\). The probability to go 
                           					'up' and 'down' are respectively \(p\) and \(q=1-p\) (under \(\mathcal{P}\)).The stock price at period \(i\) can be modeled as a function of a binomial 
                           					random variable, and the constant 'up' and 'down' factors computed: $$u=e^{\mu\delta+\sigma\sqrt{\delta}}$$ $$d=e^{\mu\delta-\sigma\sqrt{\delta}}$$ 
-                          					The \(\mathcal{Q}\)-probability allowing the discounted stock price to be a martingale amounts to the \(\\tilde{p}\) value (under \(\mathcal{Q}\)) 
-                          					that leads to the martingale property: \(\\tilde{p}=\\frac{e^{r}-d}{u-d}\).
+                          					where \(\\delta=\\frac{T}{tree periods}\). The \(\mathcal{Q}\)-probability allowing the discounted stock price to be a martingale amounts to the \(\\tilde{p}\) value (under \(\mathcal{Q}\)) 
+                          					that leads to the martingale property: \(\\tilde{p}=\\frac{e^{r\\delta}-d}{u-d}\) and \(\\tilde{q}=1-\\tilde{p}\).
                                     """]),
                                 html.Hr(),
                                 html.H4("Option price", style={"text-align":"center"}),
@@ -97,7 +97,7 @@ def body():
                   									At the begining of each period, the number of shares to hold is given by $$\Delta_{i}^{j} = \\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
                   									The initial amount of cash will thus be \(c_{0} = \Pi_{0} - \Delta_{0}s_{0}\). At each node, a portfolio rebalancing is needed to ensure that the portfolio value is 
                   									equal to the option price. Before the rebalancing, \(\Delta\) is the same from node to node. Mathematically speaking, we have that $$\Delta_{i}^{j}=\Delta_{i-1}^{j}$$ 
-                  									The cash account grew at the risk-free rate \(c_{i}^{j}=c_{i-1}^{j}e^{r}\), and the portfolio is the sum of both equity and cash positions $$\pi_{i}^{j}=c_{i}^{j}+\Delta_{i}^{j}s_{i}^{j}$$ 
+                  									The cash account grew at the risk-free rate \(c_{i}^{j}=c_{i-1}^{j}e^{r\\delta}\), and the portfolio is the sum of both equity and cash positions $$\pi_{i}^{j}=c_{i}^{j}+\Delta_{i}^{j}s_{i}^{j}$$ 
                   									The rebalancing is done by updating the number of shares to hold $$\Delta_{i}^{j}=\\frac{v_{i+1}^{j}-v_{i+1}^{j+1}}{s_{i+1}^{j}-s_{i+1}^{j+1}}$$ 
                   									and ensuring the of value of the strategy before and after the rebalancing is the same $$c_{i}^{j}=\pi_{i}^{j}-(\Delta_{i-1}^{j}-\Delta_{i}^{j})s_{i}^{j}$$ 
                   									The tree is computed forward, and will at all times replicate with option price. At the end of it we obtain the option payoff.
