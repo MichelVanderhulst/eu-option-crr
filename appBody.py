@@ -172,7 +172,7 @@ def body():
                                                                                   style={'font-weight': 'bold', "text-align":"center",'display': 'inline-block'}
                                                                                  ), 
                                                                   ]),
-                                                html.P("""Note that some errors are possible due to rounding decimals when displaying the values in the chart. Refer to 'Download the data' if you wish to check. """),
+                                                html.P("""Note that some errors are possible due to rounding decimals when displaying the values in the chart. Download the exact values in excel format if you wish to check. """),
                                                 html.Br(),
                                                 html.Div([html.Button("Download xlsx", id="btn", n_clicks=0), Download(id="download")]),
                                                 html.P("""Note: requires excel decimal separator to be a dot.""", style={"font-size":12}),
