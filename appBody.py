@@ -207,7 +207,7 @@ def graphs():
                             html.Div(children=[dcc.Markdown(children=''' #### Cash account after rebalancing'''),
                                                dcc.Graph(id='cash_acc'),],
                                      style={"float":"right", "width":"45%", "display":"inline-block"}),
-                            html.Div(children=[dcc.Markdown(children=''' #### Shares held after rebalancing'''),
+                            html.Div(children=[dcc.Markdown(children=''' #### Shares held after rebalancing (\(\Delta\))'''),
                                                dcc.Graph(id='nbr_shares'),],
                                      style={"float":"right", "width":"55%", "display":"inline-block"}),
                                 ]),
